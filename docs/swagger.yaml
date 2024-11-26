@@ -1,0 +1,266 @@
+definitions:
+  handler.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handler.statusResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  model.PaginatedLyric:
+    properties:
+      lyrics:
+        items:
+          type: string
+        type: array
+    type: object
+  model.PaginatedSong:
+    properties:
+      last_id:
+        type: integer
+      songs:
+        items:
+          $ref: '#/definitions/model.SongOutput'
+        type: array
+    type: object
+  model.SongInput:
+    properties:
+      name:
+        type: string
+      performer:
+        type: integer
+    required:
+    - name
+    - performer
+    type: object
+  model.SongOutput:
+    properties:
+      link:
+        example: https://www.youtube.com/
+        type: string
+      lyric:
+        example: Ooh baby, don't you know I suffer?\nOoh baby, can you hear me moan?
+        type: string
+      performer:
+        example: singer
+        type: string
+      release_date:
+        example: "2020-01-01"
+        type: string
+      song:
+        example: Ooh Baby
+        type: string
+    type: object
+  model.UpdateSongInput:
+    properties:
+      link:
+        type: string
+      lyric:
+        type: string
+      name:
+        type: string
+      performer_id:
+        type: string
+      release_date:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API Server for online music library
+  title: OnlineMusic
+  version: 0.0.1
+paths:
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: Get all songs with filtration by each column and pagination
+      parameters:
+      - description: Performer
+        in: query
+        name: performer_id
+        type: integer
+      - description: Song
+        in: query
+        name: song
+        type: string
+      - description: Start Date
+        format: date
+        in: query
+        name: startDate
+        type: string
+      - description: End Date
+        format: date
+        in: query
+        name: endDate
+        type: string
+      - description: Link
+        in: query
+        name: link
+        type: string
+      - description: Lyrics
+        in: query
+        name: lyric
+        type: string
+      - description: Cursor
+        in: query
+        name: cursor
+        type: integer
+      - description: Page size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Songs
+          schema:
+            $ref: '#/definitions/model.PaginatedSong'
+        "400":
+          description: Incorrect input
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Get all songs
+      tags:
+      - songs
+  /songs/:
+    post:
+      consumes:
+      - application/json
+      description: Add song by model.SongInput. Make a fetch request to the third
+        party api.
+      parameters:
+      - description: Song
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/model.SongInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Incorrect input
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Add song
+      tags:
+      - songs
+  /songs/{id}:
+    delete:
+      description: Delete song by id
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Incorrect input
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Delete song
+      tags:
+      - songs
+    put:
+      description: Update song by id from query
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Song
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateSongInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Status
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Incorrect input
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Update song
+      tags:
+      - songs
+  /songs/{id}/lyrics:
+    get:
+      description: Get song by id
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Cursor
+        in: query
+        name: cursor
+        type: integer
+      - description: Page size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Lyrics
+          schema:
+            $ref: '#/definitions/model.PaginatedLyric'
+        "400":
+          description: Incorrect input
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Get song's text with pagination
+      tags:
+      - songs
+swagger: "2.0"
