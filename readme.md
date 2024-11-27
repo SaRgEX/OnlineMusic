@@ -5,6 +5,8 @@ go run main.go
 ```
 ___
 ## ENV
+The .env file has not been hidden for simplicity
+
 Default values
 ```ini
 # database
