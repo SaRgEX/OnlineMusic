@@ -35,9 +35,9 @@ func New() *App {
 	a.db = initDatabase(a.cfg.Database)
 	qb := utils.NewQueryBuilder()
 	c := client.NewAPIClient(a.cfg.ApiURL)
-	a.r = repository.New(a.db.Connection, qb)
-	a.s = service.New(a.r)
-	a.h = handler.New(a.s, c)
+	a.r = repository.New(a.db.Connection, a.logger, qb)
+	a.s = service.New(a.r, a.logger)
+	a.h = handler.New(a.s, c, a.logger)
 	a.server = server.New(a.cfg.HTTPServer, a.h.InitRoutes())
 	return a
 }

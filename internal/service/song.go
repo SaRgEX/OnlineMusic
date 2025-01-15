@@ -3,21 +3,25 @@ package service
 import (
 	"OnlineMusic/internal/repository"
 	"OnlineMusic/model"
+	"OnlineMusic/pkg/logger"
 	"context"
 	"strings"
 )
 
 type SongService struct {
-	r repository.Song
+	r      repository.Song
+	logger *logger.Logger
 }
 
-func NewSongService(repository repository.Song) *SongService {
+func NewSongService(repository repository.Song, logger *logger.Logger) *SongService {
 	return &SongService{
-		r: repository,
+		r:      repository,
+		logger: logger,
 	}
 }
 
 func (s *SongService) ViewAll(ctx context.Context, filter model.SongFilter, cursor int, pageSize int) (response model.PaginatedSong, err error) {
+	s.logger.With("ctx", ctx)
 	response.Songs, err = s.r.ViewAll(ctx, filter, cursor, pageSize)
 	if len(response.Songs) <= 0 {
 		return response, err
@@ -45,7 +49,7 @@ func (s *SongService) Delete(ctx context.Context, id int) error {
 }
 
 func (s *SongService) Update(ctx context.Context, id int, song model.UpdateSongInput) error {
-	if err := song.Validate(); err != nil {
+	if err := song.ValidateSongInput(); err != nil {
 		return err
 	}
 	return s.r.Update(ctx, id, song)

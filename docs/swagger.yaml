@@ -27,13 +27,13 @@ definitions:
     type: object
   model.SongInput:
     properties:
+      group:
+        type: integer
       name:
         type: string
-      performer:
-        type: integer
     required:
+    - group
     - name
-    - performer
     type: object
   model.SongOutput:
     properties:
@@ -62,7 +62,7 @@ definitions:
       name:
         type: string
       performer_id:
-        type: string
+        type: integer
       release_date:
         type: string
     type: object

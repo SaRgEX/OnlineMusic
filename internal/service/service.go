@@ -3,6 +3,7 @@ package service
 import (
 	"OnlineMusic/internal/repository"
 	"OnlineMusic/model"
+	"OnlineMusic/pkg/logger"
 	"context"
 )
 
@@ -18,8 +19,8 @@ type Service struct {
 	Song
 }
 
-func New(r *repository.Repository) *Service {
+func New(r *repository.Repository, logger *logger.Logger) *Service {
 	return &Service{
-		Song: NewSongService(r.Song),
+		Song: NewSongService(r.Song, logger),
 	}
 }

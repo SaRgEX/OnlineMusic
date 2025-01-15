@@ -18,7 +18,6 @@ func Logging(c *gin.Context) {
 		log.Printf("Error reading request body: %v", err)
 	}
 
-	// Restore the request body for the next handlers
 	c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
 	c.Next()

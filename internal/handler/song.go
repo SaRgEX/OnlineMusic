@@ -4,6 +4,7 @@ import (
 	"OnlineMusic/model"
 	"context"
 	"github.com/gin-gonic/gin"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -31,7 +32,7 @@ func (h *Handler) viewAll(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	performer, err := GetIntQueryParam(c, "performer", -1)
+	performer, err := GetIntQueryParam(c, "performer_id", -1)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -142,6 +143,7 @@ func (h *Handler) add(c *gin.Context) {
 	}
 	err = h.s.Add(dbCtx, input)
 	if err != nil {
+		slog.With("error", err, "model", input).Error("Error adding song")
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -165,13 +167,19 @@ func (h *Handler) add(c *gin.Context) {
 
 	select {
 	case <-apiCtx.Done():
-		newErrorResponse(c, http.StatusRequestTimeout, "Request timed out")
+		slog.Debug("Music info fetched successfully")
+		c.JSON(http.StatusCreated, gin.H{
+			"info": "Error while fetching music info",
+		})
 		return
 	case err := <-errorChan:
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		slog.With("error", err).Error("Error while fetching music info")
+		c.JSON(http.StatusCreated, gin.H{
+			"info": "Error while fetching music info",
+		})
 		return
 	case info := <-resultChan:
-		c.JSON(http.StatusOK, info)
+		c.JSON(http.StatusCreated, info)
 	}
 }
 

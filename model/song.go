@@ -16,7 +16,7 @@ type SongFilter struct {
 
 type SongInput struct {
 	Name      string `json:"name" binding:"required"`
-	Performer int    `json:"performer" binding:"required"`
+	Performer int    `json:"group" binding:"required"`
 }
 
 type SongOutput struct {
@@ -38,14 +38,14 @@ type PaginatedLyric struct {
 }
 
 type UpdateSongInput struct {
-	Name        *string `json:"name"`
-	ReleaseDate *string `json:"release_date"`
-	Lyric       *string `json:"lyric"`
-	Link        *string `json:"link"`
-	Performer   *string `json:"performer_id"`
+	Name        *string    `json:"name"`
+	ReleaseDate *time.Time `json:"release_date"`
+	Lyric       *string    `json:"lyric"`
+	Link        *string    `json:"link"`
+	Performer   *int       `json:"performer_id"`
 }
 
-func (u *UpdateSongInput) Validate() error {
+func (u *UpdateSongInput) ValidateSongInput() error {
 	if u.Name == nil && u.Performer == nil && u.Link == nil && u.ReleaseDate == nil && u.Lyric == nil {
 		return errors.New("nothing to update")
 	}

@@ -348,15 +348,15 @@ const docTemplate = `{
         "model.SongInput": {
             "type": "object",
             "required": [
-                "name",
-                "performer"
+                "group",
+                "name"
             ],
             "properties": {
+                "group": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
-                },
-                "performer": {
-                    "type": "integer"
                 }
             }
         },
@@ -398,7 +398,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "performer_id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "release_date": {
                     "type": "string"

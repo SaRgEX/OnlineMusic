@@ -30,6 +30,7 @@ BEGIN
           AND (COALESCE(_link, '') = '' OR s.link ILIKE ('%' || _link || '%'))
           AND s.id > _cursor
           AND (p.id = _performer OR _performer = -1)
+        ORDER BY s.id
         LIMIT _page_size;
 END;
 $$ LANGUAGE plpgsql;

@@ -35,7 +35,7 @@ func (qb *QueryBuilder) BuildUpdateQueryFromSong(table string, idColumn string, 
 		fields["link"] = *input.Link
 	}
 	if input.Performer != nil {
-		fields["creator"] = *input.Performer
+		fields["performer_id"] = *input.Performer
 	}
 
 	return qb.BuildUpdateQuery(table, idColumn, idValue, fields)

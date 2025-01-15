@@ -4,20 +4,23 @@ import (
 	_ "OnlineMusic/docs"
 	"OnlineMusic/internal/client"
 	"OnlineMusic/internal/service"
+	"OnlineMusic/pkg/logger"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
-	s *service.Service
-	c *client.APIClient
+	s      *service.Service
+	c      *client.APIClient
+	logger *logger.Logger
 }
 
-func New(s *service.Service, c *client.APIClient) *Handler {
+func New(s *service.Service, c *client.APIClient, logger *logger.Logger) *Handler {
 	return &Handler{
-		s: s,
-		c: c,
+		s:      s,
+		c:      c,
+		logger: logger,
 	}
 }
 

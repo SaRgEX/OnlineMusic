@@ -2,6 +2,7 @@ package repository
 
 import (
 	"OnlineMusic/model"
+	"OnlineMusic/pkg/logger"
 	"OnlineMusic/utils"
 	"context"
 	"github.com/jackc/pgx/v5"
@@ -19,8 +20,8 @@ type Song interface {
 	Update(ctx context.Context, id int, song model.UpdateSongInput) error
 }
 
-func New(conn *pgx.Conn, qb *utils.QueryBuilder) *Repository {
+func New(conn *pgx.Conn, logger *logger.Logger, qb *utils.QueryBuilder) *Repository {
 	return &Repository{
-		Song: NewSongRepository(conn, qb),
+		Song: NewSongRepository(conn, logger, qb),
 	}
 }

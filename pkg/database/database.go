@@ -16,7 +16,7 @@ type Database struct {
 func New(ctx context.Context, cfg config.Database) (*Database, error) {
 	connectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
 		cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Database, cfg.SSLMode)
-	slog.Debug("Connecting to database: %s", connectionString)
+	slog.Info("Connecting to database", slog.String("connection string", connectionString))
 	connection, err := pgx.Connect(ctx, connectionString)
 	if err != nil {
 		return nil, err
